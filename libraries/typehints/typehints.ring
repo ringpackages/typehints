@@ -30,16 +30,24 @@ protected	= :protected
 override	= :override 
 
 # Add User Types (Define Application Classes As Types)
+# We use the eval() function two times 
+# because we must execute the (import) commands before calling the Classes() function
 
-TypeHints_Packages = Packages()
-for TypeHints_Package in TypeHints_Packages {
-	ccode = "import " + TypeHints_Package
-	eval(ccode)
-}
-
-TypeHints_Classes = Classes()
-for TypeHints_Class in TypeHints_Classes {
-	if not substr(TypeHints_Class,".") {
-		eval( TypeHints_Class + " = :" + TypeHints_Class )
+# Import Packages
+	TypeHints_cCode = ""
+	TypeHints_Packages = Packages()
+	for TypeHints_Package in TypeHints_Packages {
+		TypeHints_cCode += "import " + TypeHints_Package + nl
 	}
-}
+	eval(TypeHints_cCode)
+
+# Defines classes as types 	
+	TypeHints_cCode = ""
+	TypeHints_Classes = Classes()
+	for TypeHints_Class in TypeHints_Classes {
+		if not substr(TypeHints_Class,".") {
+			TypeHints_cCode += TypeHints_Class + " = :" + TypeHints_Class + nl
+		}
+	}
+	eval(TypeHints_cCode)
+	
